@@ -3,7 +3,9 @@ package com.proyecto.integrador.backend.app.entity;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -31,12 +33,14 @@ public class Proyecto {
     
     private String titulo;
     
+    @JsonBackReference(value = "usuario-proyectos")
     @JsonIgnoreProperties({"proyectos", "hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
-    
-    @JsonIgnoreProperties({"proyecto", "hibernateLazyInitializer", "handler"})
+
+    @JsonManagedReference(value = "proyecto-tareas")
+    @JsonIgnoreProperties({"proyectos", "hibernateLazyInitializer", "handler"})
     @OneToMany(mappedBy = "proyecto", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Tarea> tareas;
     

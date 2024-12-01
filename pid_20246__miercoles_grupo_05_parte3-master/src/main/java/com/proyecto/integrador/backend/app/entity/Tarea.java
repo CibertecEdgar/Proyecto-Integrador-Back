@@ -1,6 +1,8 @@
 package com.proyecto.integrador.backend.app.entity;
 
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,20 +41,23 @@ public class Tarea {
 	
 	private boolean completado = false;
 
-	@NotEmpty(message = "no debe estar vacía")
-	private String estado;
+	// @NotEmpty(message = "no debe estar vacía")
+	// private String estado;
 
-	@NotNull(message = "no debe estar vacía")
+    private String prioridad;
+
 	@Column(name = "creado_en")
 	@Temporal(TemporalType.DATE)
 	private Date creadoEn;
 	
+    @JsonBackReference(value = "usuario-tareas")
 	@JsonIgnoreProperties({"tareas","hibernateLazyInitializer", "handler"})
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "usuario_id")
 	private Usuario usuario;
 
-	@ManyToOne
+    @JsonBackReference(value = "proyecto-tareas")
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "proyecto_id", nullable = true)
     private Proyecto proyecto;
 
@@ -101,12 +106,20 @@ public class Tarea {
         this.completado = completado;
     }
 
-    public String getEstado() {
-        return estado;
+    // public String getEstado() {
+    //     return estado;
+    // }
+
+    // public void setEstado(String estado) {
+    //     this.estado = estado;
+    // }
+
+    public String getPrioridad() {
+        return prioridad;
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public void setPrioridad(String prioridad) {
+        this.prioridad = prioridad;
     }
 
     public Date getCreadoEn() {

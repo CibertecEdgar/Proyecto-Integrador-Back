@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.proyecto.integrador.backend.app.validation.password.PasswordValidator;
 
@@ -91,9 +92,11 @@ public class Usuario implements UserDetails {
 	@Enumerated(EnumType.STRING)
 	private Role role;
 	
+	@JsonManagedReference(value = "usuario-tareas")
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Tarea> tareas;
 
+	@JsonManagedReference(value = "usuario-proyectos")
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Proyecto> proyectos;
 
