@@ -17,4 +17,6 @@ public interface TareaRepository extends JpaRepository<Tarea, Integer> {
 	
 	//buscar por el titulo y idproyecto
 	public Optional<Tarea> findByTituloAndProyecto(String titulo, Proyecto idProyecto);
+
+	public List<Tarea> findByProyectoId(int proyectoId);
 }

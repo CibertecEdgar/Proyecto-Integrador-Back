@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -56,6 +57,16 @@ public class TareaController {
             return ResponseEntity.badRequest().body("Tarea no encontrada");
         }
         
+    }
+
+    @GetMapping("/proyecto/{id}")
+    public ResponseEntity<List<Tarea>> getAllTasksByProject(@PathVariable int id) {
+        Usuario usuario = getAuthenticatedUsuario();
+        if (usuario == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        List<Tarea> tasks = tareaService.findByProyectoId(id);
+        return ResponseEntity.ok(tasks);
     }
 
     @PostMapping

@@ -11,4 +11,4 @@ public interface ProyectoRepository extends JpaRepository<Proyecto, Integer> {
 	public abstract Optional<Proyecto> findByTitulo(String titulo);
 	public abstract List<Proyecto> findByUsuarioId(int usuarioId);
 
-}  
+}

@@ -14,4 +14,5 @@ public interface TareaService {
 	public abstract Tarea create(Tarea tarea, int usuarioId);
 	public abstract Tarea update(int id, Tarea tarea);
 	public abstract Optional<Tarea> deleteById(int id);
+	public abstract List<Tarea> findByProyectoId(int proyectoId);
 }

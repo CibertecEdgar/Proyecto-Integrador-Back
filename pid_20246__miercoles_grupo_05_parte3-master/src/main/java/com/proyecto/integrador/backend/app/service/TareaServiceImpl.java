@@ -121,7 +121,12 @@ public class TareaServiceImpl implements TareaService{
 		}
 		return tareaOptional;
 	}
-	
+
+	@Override
+	public List<Tarea> findByProyectoId(int proyectoId) {
+		return tareaRepository.findByProyectoId(proyectoId);
+	}
+
 	private Usuario getAuthenticatedUsuario() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String username = authentication.getName();

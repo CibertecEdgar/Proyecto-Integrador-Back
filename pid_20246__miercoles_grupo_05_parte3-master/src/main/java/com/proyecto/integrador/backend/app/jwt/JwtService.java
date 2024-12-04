@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import com.proyecto.integrador.backend.app.entity.Usuario;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +21,11 @@ public class JwtService {
 
 	private static final String SECRET_KEY= "586E3272357538782F413F4428472B4B6250655368566B597033733676397924";
 	
-	public String getToken(UserDetails usuario) {
-		return getToken(new HashMap<>(), usuario);
+	public String getToken(UserDetails usuario, Usuario userEntity) {
+		Map<String, Object> claims = new HashMap<>();
+		claims.put("fullName", userEntity.getNombre() + " " + userEntity.getApellido());
+		return getToken(claims, usuario);
+//		return getToken(new HashMap<>(), usuario);
 	}
 
 	private String getToken(Map<String, Object> extraClaims, UserDetails usuario) {

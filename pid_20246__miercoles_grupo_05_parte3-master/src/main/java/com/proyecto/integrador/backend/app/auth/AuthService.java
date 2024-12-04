@@ -36,7 +36,8 @@ public class AuthService {
 		authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 		UserDetails usuario = usuarioRepository.findByUsername(request.getUsername()).orElseThrow();
-		String token = jwtService.getToken(usuario);
+		Usuario userEntity = usuarioRepository.findByUsername(request.getUsername()).orElseThrow();
+		String token = jwtService.getToken(usuario, userEntity);
 		return new AuthResponse(token);
 	}
 
@@ -84,7 +85,8 @@ public class AuthService {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al registrar el usuario: " + e.getMessage());
 		}
 
-		return new AuthResponse(jwtService.getToken(usuario));
+		UserDetails userDetails = usuarioRepository.findByUsername(request.getUsername()).orElseThrow();
+		return new AuthResponse(jwtService.getToken(userDetails, usuario));
 
 	}
 
