@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.proyecto.integrador.backend.app.entity.Proyecto;
 import com.proyecto.integrador.backend.app.entity.Usuario;
+import com.proyecto.integrador.backend.app.exception.dto.ProyectoAlreadyExistsException;
 import com.proyecto.integrador.backend.app.repository.ProyectoRepository;
 import com.proyecto.integrador.backend.app.repository.UsuarioRepository;
 
@@ -39,17 +40,17 @@ public class ProyectoServiceImpl implements ProyectoService {
 
 	    @Override
 	    public Proyecto create(Proyecto proyecto, int usuarioId) {
-			Usuario usuario = getAuthenticatedUsuario();
-			
-	        // Validar que no exista un proyecto con el mismo nombre
-	        Optional<Proyecto> existingProyecto = proyectoRepository.findByTitulo(proyecto.getTitulo());
-	        if (existingProyecto.isPresent()) {
-	            throw new RuntimeException("Ya existe un proyecto con el titulo: " + proyecto.getTitulo());
-	        }
+            Usuario usuario = getAuthenticatedUsuario();
 
-			proyecto.setUsuario(usuario);
-	        return proyectoRepository.save(proyecto);
-	    }
+            // Validar que no exista un proyecto con el mismo nombre
+            Optional<Proyecto> existingProyecto = proyectoRepository.findByTitulo(proyecto.getTitulo());
+            if (existingProyecto.isPresent()) {
+                throw new ProyectoAlreadyExistsException("Ya existe un proyecto con el titulo: " + proyecto.getTitulo());
+            }
+
+            proyecto.setUsuario(usuario);
+            return proyectoRepository.save(proyecto);
+        }
 
 	    @Override
 	    public Proyecto update(int id, Proyecto proyecto) {

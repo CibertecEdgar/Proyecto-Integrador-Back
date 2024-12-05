@@ -79,7 +79,7 @@ public class ProyectoController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
+        	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Ya existe un proyecto con el titulo: " + proyecto.getTitulo());
         }
     }
 	
