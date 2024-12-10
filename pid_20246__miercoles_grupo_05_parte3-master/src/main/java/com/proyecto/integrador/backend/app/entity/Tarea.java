@@ -40,6 +40,8 @@ public class Tarea {
 	private Date fechaFin;
 	
 	private boolean completado = false;
+	
+	private boolean esPrioridad = false;
 
 	// @NotEmpty(message = "no debe estar vacía")
 	// private String estado;
@@ -60,6 +62,7 @@ public class Tarea {
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "proyecto_id", nullable = true)
     private Proyecto proyecto;
+    
 
 	@PrePersist
     void prePersist(){
@@ -145,4 +148,14 @@ public class Tarea {
     public void setProyecto(Proyecto proyecto) {
         this.proyecto = proyecto;
 	}
+
+	public boolean isEsPrioridad() {
+		return esPrioridad;
+	}
+
+	public void setEsPrioridad(boolean esPrioridad) {
+		this.esPrioridad = esPrioridad;
+	}
+    
+    
 }

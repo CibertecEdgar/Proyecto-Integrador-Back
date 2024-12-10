@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.proyecto.integrador.backend.app.entity.Proyecto;
 import com.proyecto.integrador.backend.app.exception.dto.ErrorResponseLogin;
 import com.proyecto.integrador.backend.app.exception.dto.ProyectoAlreadyExistsException;
 
@@ -22,11 +23,11 @@ import jakarta.validation.ConstraintViolationException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<ErrorResponseLogin> handleResponseStatusException(ResponseStatusException ex) {
-        ErrorResponseLogin errorResponse = new ErrorResponseLogin(ex.getReason());
-        return ResponseEntity.status(ex.getStatusCode()).body(errorResponse);
-    }
+	@ExceptionHandler(ResponseStatusException.class)
+	public ResponseEntity<ErrorResponseLogin> handleResponseStatusException(ResponseStatusException ex) {
+	    ErrorResponseLogin errorResponse = new ErrorResponseLogin(ex.getReason());
+	    return ResponseEntity.status(ex.getStatusCode()).body(errorResponse);
+	}
     
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
@@ -64,9 +65,12 @@ public class GlobalExceptionHandler {
     }
     
     @ExceptionHandler(ProyectoAlreadyExistsException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handleProyectoAlreadyExistsException(ProyectoAlreadyExistsException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    public ResponseEntity<Map<String, String>> handleProyectoAlreadyExistsException(ProyectoAlreadyExistsException e) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("mensaje", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
+    
+    
 
 }

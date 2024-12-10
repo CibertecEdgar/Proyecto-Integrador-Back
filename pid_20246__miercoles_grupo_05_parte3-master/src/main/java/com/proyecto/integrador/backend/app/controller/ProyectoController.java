@@ -1,6 +1,8 @@
 package com.proyecto.integrador.backend.app.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.proyecto.integrador.backend.app.entity.Proyecto;
-import com.proyecto.integrador.backend.app.entity.Tarea;
 import com.proyecto.integrador.backend.app.entity.Usuario;
+import com.proyecto.integrador.backend.app.exception.dto.ProyectoAlreadyExistsException;
 import com.proyecto.integrador.backend.app.repository.UsuarioRepository;
 import com.proyecto.integrador.backend.app.service.ProyectoService;
 
@@ -76,10 +78,10 @@ public class ProyectoController {
         try {
             Proyecto nuevoProyecto = proyectoService.create(proyecto, usuario.getId());
             return ResponseEntity.status(HttpStatus.CREATED).body(nuevoProyecto);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (Exception e) {
-        	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Ya existe un proyecto con el titulo: " + proyecto.getTitulo());
+        } catch (ProyectoAlreadyExistsException e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("detalles", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
     }
 	

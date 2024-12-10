@@ -129,5 +129,12 @@ public class TareaController {
 		
 		return ResponseEntity.badRequest().body(errors);
 	}
-	
+
+    /* COMPLETAR TAREA */
+    @PutMapping("/completar/{id}")
+    public ResponseEntity<Tarea> markTaskAsCompleted(@PathVariable int id) {
+        Tarea tarea = tareaService.completed(id);
+        return ResponseEntity.ok(tarea);
+    }
+
 }

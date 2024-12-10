@@ -33,12 +33,19 @@ public class AuthService {
 	private AuthenticationManager authenticationManager;
 
 	public AuthResponse login(LoginRequest request) {
-		authenticationManager
-				.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-		UserDetails usuario = usuarioRepository.findByUsername(request.getUsername()).orElseThrow();
-		Usuario userEntity = usuarioRepository.findByUsername(request.getUsername()).orElseThrow();
-		String token = jwtService.getToken(usuario, userEntity);
-		return new AuthResponse(token);
+		try {
+	        authenticationManager.authenticate(
+	                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+	    } catch (Exception e) {
+	        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciales invalidas");
+	    }
+
+	    UserDetails usuario = usuarioRepository.findByUsername(request.getUsername())
+	            .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciales invalidas"));
+
+	    Usuario userEntity = usuarioRepository.findByUsername(request.getUsername()).orElseThrow();
+	    String token = jwtService.getToken(usuario, userEntity);
+	    return new AuthResponse(token);
 	}
 
 	public AuthResponse register(RegisterRequest request) {

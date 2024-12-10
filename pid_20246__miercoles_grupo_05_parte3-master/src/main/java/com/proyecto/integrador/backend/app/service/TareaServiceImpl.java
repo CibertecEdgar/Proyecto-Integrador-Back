@@ -74,6 +74,10 @@ public class TareaServiceImpl implements TareaService{
 	    if (tareaExistente.isPresent()) {
 	        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ya existe una tarea con el mismo título en este proyecto");
 	    }
+	   
+	    if(tarea.getPrioridad() != null) {
+	    	tarea.setEsPrioridad(true);
+	    }
 	    
 		tarea.setUsuario(usuario);
 		return tareaRepository.save(tarea);
@@ -96,7 +100,8 @@ public class TareaServiceImpl implements TareaService{
 			tareaDb.setTitulo(tarea.getTitulo());
 			tareaDb.setDescripcion(tarea.getDescripcion());
 			tareaDb.setFechaFin(tarea.getFechaFin());
-			tareaDb.setCompletado(tarea.isCompletado());
+			tareaDb.setPrioridad(tarea.getPrioridad());
+			tareaDb.setEsPrioridad(tarea.isEsPrioridad());
 
 			return tareaRepository.save(tareaDb);
 		}
@@ -132,6 +137,26 @@ public class TareaServiceImpl implements TareaService{
 		String username = authentication.getName();
 		return usuarioRepository.findByUsername(username)
 				.orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+	}
+
+	@Override
+	public Tarea completed(int id) {
+		Usuario usuario = getAuthenticatedUsuario();
+
+		Optional<Tarea> tareaOptional = tareaRepository.findById(id);
+
+		if (tareaOptional.isPresent()) {
+			Tarea tarea = tareaOptional.get();
+
+			if (tarea.getUsuario() == null || tarea.getUsuario().getId() != usuario.getId()) {
+				throw new RuntimeException("No tienes permiso para marcar esta tarea como completada");
+			}
+
+			tarea.setCompletado(true);
+			return tareaRepository.save(tarea);
+		}
+
+		throw new RuntimeException("Tarea no encontrada");
 	}
 
 }
